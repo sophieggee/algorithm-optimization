@@ -31,16 +31,16 @@ def backward(string):
 
 
 def list_ops():
-    """change the list 'bear, ant, cat, dog' to ''fox', 'hawk', 'dog', 'bear', 'hunter''"""
+    """change the list 'bear, ant, cat, dog' to ''fox', 'hawk', 'dog', 'bearhunter''"""
     list = ["bear", "ant", "cat", "dog"]
     list.append("eagle")
     list[2] = "fox"
     list.pop(1)
     list = sorted(list, reverse=True)
     list[list.index("eagle")] = "hawk"
-    list.append("hunter")
+    list[-1] = list[-1]+"hunter"
     return list
-
+print(list_ops)
 # Problem 4
 
 
@@ -61,7 +61,7 @@ def prob5(A):
         >>> prob4(A)
         array([0, 0, 3])
     """
-    new_A = A
+    new_A = A.copy()
     mask = new_A < 0
     new_A[mask] = 0
     return new_A
@@ -78,11 +78,12 @@ def prob6():
     A = np.array([[0, 2, 4], [1, 3, 5]])
     B = np.array([[3, 0, 0], [3, 3, 0], [3, 3, 3]])
     C = np.array([[-2, 0, 0], [0, -2, 0], [0, 0, -2]])
+    I = np.array([[1, 0, 0], [0, 1, 0], [0, 0, 1]])
     part_1 = np.vstack((np.zeros((3, 3)), A, B))
     part_2 = np.vstack((A.T, np.zeros((2, 2)), np.zeros((3, 2))))
-    part_3 = np.vstack((B, np.zeros((2, 3)), C))
+    part_3 = np.vstack((I, np.zeros((2, 3)), C))
     return(np.concatenate((part_1, part_2, part_3), axis=1))
-
+print(prob5())
 
 def prob7(A):
     """Divide each row of 'A' by the row sum and return the resulting array.
