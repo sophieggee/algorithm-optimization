@@ -22,3 +22,5 @@ def test_ComplexNumber(a, b):
     # Validate __str__().
     if str(py_cnum) != str(my_cnum):
         print("__str__() failed for", py_cnum)
+
+test_ComplexNumber(3, 4)

@@ -5,7 +5,7 @@
 <9/9/21>
 """
 
-import numpy as np
+import math
 
 class Backpack:
     """A Backpack object class. Has a name and a list of contents.
@@ -165,13 +165,21 @@ class ComplexNumber:
         self.real = real
         self.imag = imag
 
+    def __str__(self):
+        """ a + bi is printed out as (a+bj) for b ≥ 0 and (a-bj)
+        for b < 0."""
+        if self.imag >= 0:
+            return f"({self.real}+{self.imag}j)"
+        else:
+            return f"({self.real}-{self.imag}j)"
+            
     def conjugate(self):
         """Returns the object’s complex conjugate as a new ComplexNumber object"""
         return ComplexNumber(self.real, (-1*self.imag))
     
     def __abs__(self):
         """Returns the magnitude of the complex number"""
-        return np.sqrt(self.real**2+self.imag**2)
+        return math.sqrt(self.real**2+self.imag**2)
 
     def __eq__(self, other):
         """Returns true if two ComplexNumber objects are equal;
