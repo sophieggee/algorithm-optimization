@@ -45,3 +45,9 @@ TypeError while loading 'python_numpy2.py': prob5() missing 1 required positiona
 
 -------------------------------------------------------------------------------
 
+09/09/21 16:14
+
+TypeError while loading 'python_numpy2.py': prob5() missing 1 required positional argument: 'A'
+
+-------------------------------------------------------------------------------
+
