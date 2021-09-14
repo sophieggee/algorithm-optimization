@@ -5,7 +5,7 @@
 <9/9/21>
 """
 
-import math
+import numpy as np
 
 class Backpack:
     """A Backpack object class. Has a name and a list of contents.
@@ -34,8 +34,8 @@ class Backpack:
         
         Check that the backpack does not go over capacity. 
         If there are already max_size items or more, 
-        Print “No Room!” and do not add the item to the contents list.
-        """
+        Print “No Room!” and do not add the item to the contents list."""
+
         if len(self.contents) < self.max_size:
             self.contents.append(item)
         else:
@@ -171,15 +171,15 @@ class ComplexNumber:
         if self.imag >= 0:
             return f"({self.real}+{self.imag}j)"
         else:
-            return f"({self.real}-{self.imag}j)"
-            
+            return f"({self.real}{self.imag}j)"
+
     def conjugate(self):
         """Returns the object’s complex conjugate as a new ComplexNumber object"""
         return ComplexNumber(self.real, (-1*self.imag))
     
     def __abs__(self):
         """Returns the magnitude of the complex number"""
-        return math.sqrt(self.real**2+self.imag**2)
+        return np.sqrt(self.real**2+self.imag**2)
 
     def __eq__(self, other):
         """Returns true if two ComplexNumber objects are equal;
@@ -205,3 +205,4 @@ class ComplexNumber:
         real_part = ((self.real*other.real)+(self.imag*other.imag))/((other.real**2)+(other.imag**2))
         imag_part = ((self.imag*other.real)-(self.real*other.imag))/((other.real**2)+(other.imag**2))
         return ComplexNumber(real_part, imag_part)
+
