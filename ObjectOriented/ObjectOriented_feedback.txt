@@ -1,0 +1,44 @@
+09/13/21 22:16
+
+Problem 1 (10 points):
+Score += 10
+
+Problem 2 (10 points):
+Score += 10
+
+Problem 3 (10 points):
+Incorrect Backpack.__str__():
+
+        Owner:      Student
+        Color:      green
+        Size:       0
+        Max Size:   4
+        Contents:   []
+        
+
+Incorrect Backpack.__str__():
+
+        Owner:      Master Yoda
+        Color:      tan
+        Size:       4
+        Max Size:   7
+        Contents:   ['Crystal', 'Lightsaber', 'Commlink', 'Banana']
+        
+
+Score += 8
+
+Problem 4 (15 points):
+ComplexNumber.__str__() failed for b < 0
+	Correct response: '(-25-13j)'
+	Student response: '(-25--13j)'
+Score += 14
+
+Code Quality (5 points):
+Score += 5
+
+Total score: 47/50 = 94.0%
+
+Great job!
+
+-------------------------------------------------------------------------------
+
