@@ -35,7 +35,6 @@ class Backpack:
         Check that the backpack does not go over capacity. 
         If there are already max_size items or more, 
         Print “No Room!” and do not add the item to the contents list."""
-
         if len(self.contents) < self.max_size:
             self.contents.append(item)
         else:
@@ -72,11 +71,11 @@ class Backpack:
         """Returns the string representation of an object"""
 
         return """
-        Owner:      {name}
-        Color:      {color}
-        Size:       {size}
-        Max Size:   {max}
-        Contents:   {contents}
+Owner:      {name}
+Color:      {color}
+Size:       {size}
+Max Size:   {max}
+Contents:   {contents}
         """.format(name=self.name, color= self.color, 
         size=len(self.contents), max = self.max_size, contents = self.contents)
 
