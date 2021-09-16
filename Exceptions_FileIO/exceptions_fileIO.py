@@ -90,7 +90,7 @@ class ContentFilter(object):
                     ContentFilter.alphachars = sum([s.isalpha() for s in contents])
                     ContentFilter.numchars = sum([s.isdigit() for s in contents])
                     ContentFilter.whitespacechars = sum([s.isspace() for s in contents])
-                    ContentFilter.numoflines = len(myfile.readlines())
+                    ContentFilter.numoflines = len(contents.split('\n'))
                 break
             except (FileNotFoundError, TypeError, OSError):
                 filename = input("Please enter a valid file name: ")
@@ -116,20 +116,34 @@ class ContentFilter(object):
         """Write the data to the outfile in reverse order."""
         if unit == 'word':
             with open(outfile, mode) as myfile:
-               for i in range(len(self.contents.split('\n'))):
-                    myfile.write(str(self.contents.split('\n')[i].split(' ')[::-1]))
+                my_string = ""
+                for i in range(len(self.contents.split('\n'))):
+                    for j in range(len(self.contents.split('\n')[i].split(' '))-1, -1, -1):
+                        my_string += (self.contents.split('\n')[i].split(' ')[j]) 
+                        if j > 0:
+                            my_string += " "
+                    my_string += "\n"
+                myfile.writelines(my_string.strip())
         elif unit == 'line':
             with open(outfile, mode) as myfile:
-                for i in range(len(self.contents.split('\n'))-1, 0, -1):
-                    myfile.write(self.contents.split('\n')[i])
+                my_string = ""
+                for i in range(len(self.contents.split('\n'))-1, -1, -1):
+                    my_string += (self.contents.split('\n')[i]+"\n")
+                myfile.writelines(my_string.rstrip())
         else: 
             raise ValueError("Unit not correctly specified.")
 
     def transpose(self, outfile, mode='w'):
         """Write the transposed version of the data to the outfile."""
         with open(outfile, mode) as myfile:
-            for i in range(len(self.contents.split(' '))):
-                myfile.write(str(self.contents.split('/n')[:i]))
+            my_string = ""
+            for i in range(len(self.contents.split('\n')[0].split(' '))):
+                for j in range(len(self.contents.strip().split('\n'))):
+                    my_string += (self.contents.split('\n')[j].split(' ')[i]) 
+                    if j < len(self.contents.strip().split('\n'))-1:
+                        my_string+= " "
+                my_string += "\n"
+            myfile.writelines(my_string.strip())
 
     def __str__(self):
         """String representation: info about the contents of the file."""

@@ -1,1 +1,4 @@
-['C', 'b', 'A']['f', 'E', 'd']['']d E f
+C b A
+f E d
+d E f
+A b C
