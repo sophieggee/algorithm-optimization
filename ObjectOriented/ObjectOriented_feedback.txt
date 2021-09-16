@@ -54,12 +54,19 @@ Problem 3 (10 points):
 There weren't enough tabs on some of the lines
 Incorrect Backpack.__str__():
 
+Correct output:
+Owner:		Master Yoda
+Color:		tan
+Size:		4
+Max Size:	7
+Contents:	['Crystal', 'Lightsaber', 'Commlink', 'Banana']
+
+Student Output:
 Owner:      Master Yoda
 Color:      tan
 Size:       4
 Max Size:   7
 Contents:   ['Crystal', 'Lightsaber', 'Commlink', 'Banana']
-        
 
 Score += 8
 
