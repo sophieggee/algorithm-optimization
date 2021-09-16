@@ -42,3 +42,36 @@ Great job!
 
 -------------------------------------------------------------------------------
 
+09/16/21 12:23
+
+Problem 1 (10 points):
+Score += 10
+
+Problem 2 (10 points):
+Score += 10
+
+Problem 3 (10 points):
+There weren't enough tabs on some of the lines
+Incorrect Backpack.__str__():
+
+Owner:      Master Yoda
+Color:      tan
+Size:       4
+Max Size:   7
+Contents:   ['Crystal', 'Lightsaber', 'Commlink', 'Banana']
+        
+
+Score += 8
+
+Problem 4 (15 points):
+Score += 15
+
+Code Quality (5 points):
+Score += 5
+
+Total score: 48/50 = 96.0%
+
+Great job!
+
+-------------------------------------------------------------------------------
+
