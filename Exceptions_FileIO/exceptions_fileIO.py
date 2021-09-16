@@ -24,19 +24,19 @@ def arithmagic():
 
     step_1 = input(
         "Enter a 3-digit number where the first and last digits differ by 2 or more: ")
-    if len(str(step_1)) != 3:
+    if len(str(step_1)) != 3: #check if number step_1 is a 3-digit number
         raise ValueError("You must enter a 3-digit number.")
-    if int(str(step_1)[2])-int(str(step_1)[0]) < 2:
+    if int(str(step_1)[2])-int(str(step_1)[0]) < 2: #check if first and last digits differ by more than 2
         raise ValueError("First and last digit must differ by at least 2.")
     step_2 = input(
         "Enter the reverse of the first number, obtained by reading it backwards: ")
-    if str(step_2)[::-1] != str(step_1):
+    if str(step_2)[::-1] != str(step_1): #check if step_2 is the reverse of the first number
         raise ValueError("This number is not the reverse of the first.")
     step_3 = input("Enter the positive difference of these numbers: ")
-    if step_3 != abs(step_1-step_2):
+    if step_3 != abs(step_1-step_2): #check if step_3 is the positive difference of the first two numbers
         raise ValueError("This is not the correct value of the positive difference.")
     step_4 = input("Enter the reverse of the previous result: ")
-    if str(step_4)[::-1] != str(step_3):
+    if str(step_4)[::-1] != str(step_3): #check if step_4 is the reverse of the third number
         raise ValueError("This number is not the reverse of the previous result.")
     print(str(step_3), "+", str(step_4), "= 1089 (ta-da!)")
 
@@ -54,10 +54,10 @@ def random_walk(max_iters=1e12):
 
     walk = 0
     directions = [1, -1]
-    try: 
+    try: #try regular walking directions 
         for i in range(int(max_iters)):
             walk += choice(directions)
-    except KeyboardInterrupt:
+    except KeyboardInterrupt: #throw exception if user inputs control C
         print("Process interrupted at iteration ", i)
     else:
         print("Process completed")
@@ -81,10 +81,11 @@ class ContentFilter(object):
         the user until a valid filename is given.
         """
         while True:
-            try:
+            try: 
                 with open(filename, 'r') as myfile:
+                    #set contentfilter attributes as needed
                     contents = myfile.read()
-                    ContentFilter.contents = contents
+                    ContentFilter.contents = contents 
                     ContentFilter.filename = filename
                     ContentFilter.totalchars = len(contents)
                     ContentFilter.alphachars = sum([s.isalpha() for s in contents])
@@ -92,16 +93,16 @@ class ContentFilter(object):
                     ContentFilter.whitespacechars = sum([s.isspace() for s in contents])
                     ContentFilter.numoflines = len(contents.split('\n'))
                 break
-            except (FileNotFoundError, TypeError, OSError):
+            except (FileNotFoundError, TypeError, OSError): #throw exception if filename is not valid
                 filename = input("Please enter a valid file name: ")
 
  # Problem 4 ---------------------------------------------------------------
     def check_mode(self, mode):
         """Raise a ValueError if the mode is invalid."""
-        if mode != 'w' or 'x' or 'a':
+        if mode != 'w' or 'x' or 'a': #check if mode is valid, else throw exception
             raise ValueError("Must specify meaningful mode.")
 
-    def uniform(self, outfile, mode='w', case='upper'):
+    def uniform(self, outfile, mode='w', case='upper'): #set all contents of file to either upper or lower, or throw exception
         """Write the data ot the outfile in uniform case."""
         if case == 'upper':
             with open(outfile, mode) as myfile:
@@ -112,9 +113,9 @@ class ContentFilter(object):
         else: 
             raise ValueError("Case not correctly specified.")
 
-    def reverse(self, outfile, mode='w', unit='line'):
+    def reverse(self, outfile, mode='w', unit='line'): 
         """Write the data to the outfile in reverse order."""
-        if unit == 'word':
+        if unit == 'word': #reverse the words in each line by splitting lines by spaces and decrementing
             with open(outfile, mode) as myfile:
                 my_string = ""
                 for i in range(len(self.contents.split('\n'))):
@@ -124,7 +125,7 @@ class ContentFilter(object):
                             my_string += " "
                     my_string += "\n"
                 myfile.writelines(my_string.strip())
-        elif unit == 'line':
+        elif unit == 'line': #reverse order of lines by splitting content by /n and decrementing
             with open(outfile, mode) as myfile:
                 my_string = ""
                 for i in range(len(self.contents.split('\n'))-1, -1, -1):
@@ -133,7 +134,7 @@ class ContentFilter(object):
         else: 
             raise ValueError("Unit not correctly specified.")
 
-    def transpose(self, outfile, mode='w'):
+    def transpose(self, outfile, mode='w'): #set each column to a row and vice versa
         """Write the transposed version of the data to the outfile."""
         with open(outfile, mode) as myfile:
             my_string = ""
