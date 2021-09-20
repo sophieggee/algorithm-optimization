@@ -1,0 +1,24 @@
+09/20/21 17:31
+
+Problem 1 (5 points):
+arithmagic() failed to raise a ValueError (got a TypeError instead)
+TypeError: unsupported operand type(s) for -: 'str' and 'str'
+
+Problem 2 (5 points):
+Score += 5
+
+Problem 3 (10 points):
+Score += 10
+
+Problem 4 (25 points):
+Score += 25
+
+Code Quality (5 points):
+Score += 5
+
+Total score: 45/50 = 90.0%
+
+Great job!
+
+-------------------------------------------------------------------------------
+
