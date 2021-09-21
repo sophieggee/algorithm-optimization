@@ -33,7 +33,7 @@ def arithmagic():
     if str(step_2)[::-1] != str(step_1): #check if step_2 is the reverse of the first number
         raise ValueError("This number is not the reverse of the first.")
     step_3 = input("Enter the positive difference of these numbers: ")
-    if step_3 != abs(step_1-step_2): #check if step_3 is the positive difference of the first two numbers
+    if int(step_3) != abs(int(step_1)-int(step_2)): #check if step_3 is the positive difference of the first two numbers
         raise ValueError("This is not the correct value of the positive difference.")
     step_4 = input("Enter the reverse of the previous result: ")
     if str(step_4)[::-1] != str(step_3): #check if step_4 is the reverse of the third number
@@ -158,10 +158,4 @@ Number of lines:        {lines}
         num=self.numchars, white = self.whitespacechars, lines = self.numoflines)
 
 if __name__ == "__main__":
-    cf = ContentFilter("cf_example1.txt")
-    cf.uniform("uniform.txt", mode='w', case="upper")
-    cf.uniform("uniform.txt", mode='a', case="lower")
-    cf.reverse("reverse.txt", mode='w', unit="word")
-    cf.reverse("reverse.txt", mode='a', unit="line")
-    cf.transpose("transpose.txt", mode='w')
-    print(cf)
+    arithmagic()
