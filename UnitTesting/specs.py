@@ -153,11 +153,11 @@ def is_set(a, b, c):
             and c are either the same or all different for i=1,2,3,4.
         False if a, b, and c do not form a set.
     """
-    sum_of_matches = 0
+    sum_of_matches = 0 #collect information on whether or not indices are all equal or all different
     for i in range(4):
         if (int(a[i]) + int(b[i]) + int(c[i])) % 3 == 0:
             sum_of_matches+= 1
-    if sum_of_matches == 4:
+    if sum_of_matches == 4: #matches must be 4 in order to have a set
         return True
     else: 
         return False
