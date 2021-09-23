@@ -1,9 +1,11 @@
 # specs.py
 """Python Essentials: Unit Testing.
-<Name>
-<Class>
-<Date>
+<Sophie Gee>
+<section 3>
+<09/23/21>
 """
+
+import itertools as it
 
 def add(a, b):
     """Add two numbers."""
@@ -20,7 +22,7 @@ def divide(a, b):
 def smallest_factor(n):
     """Return the smallest prime factor of the positive integer n."""
     if n == 1: return 1
-    for i in range(2, int(n**.5)):
+    for i in range(2, int(n**.5)+1):
         if n % i == 0: return i
     return n
 
@@ -93,10 +95,10 @@ class Fraction(object):
             return float(self) == other
 
     def __add__(self, other):
-        return Fraction(self.numer*other.numer + self.denom*other.denom,
+        return Fraction(self.numer*other.denom + other.numer*self.denom,
                                                         self.denom*other.denom)
     def __sub__(self, other):
-        return Fraction(self.numer*other.numer - self.denom*other.denom,
+        return Fraction(self.numer*other.denom - other.numer*self.denom,
                                                         self.denom*other.denom)
     def __mul__(self, other):
         return Fraction(self.numer*other.numer, self.denom*other.denom)
@@ -123,7 +125,22 @@ def count_sets(cards):
             - one or more cards does not have exactly 4 digits, or
             - one or more cards has a character other than 0, 1, or 2.
     """
-    raise NotImplementedError("Problem 6 Incomplete")
+    list_of_sets = 0
+    if len(cards) != 12: #checks if there are 12 cards
+        raise ValueError("size of hand must be 12")
+    if len(cards) != len(set(cards)): #checks if all cards are not unique
+        raise ValueError("not all cards unique")
+    for card in cards: #checks if all cards have exactly 4 digits
+        if len(card) != 4:
+            raise ValueError("one or more cards does not have exactly 4 digits")
+        for i in range(4): #checks is all cards have only 0, 1, or 2
+            if card[i] not in ["0","1","2"]:
+                raise ValueError("one or more cards has a character other than 0, 1, or 2")
+    for combination in it.combinations(cards, 3):
+        if is_set(combination[0], combination[1], combination[2]):
+            #if (int(combination[0][i]) + int(combination[1][i]) + int(combination[2][i])) % 3 == 0:
+            list_of_sets += 1
+    return list_of_sets
 
 def is_set(a, b, c):
     """Determine if the cards a, b, and c constitute a set.
@@ -136,4 +153,11 @@ def is_set(a, b, c):
             and c are either the same or all different for i=1,2,3,4.
         False if a, b, and c do not form a set.
     """
-    raise NotImplementedError("Problem 6 Incomplete")
+    sum_of_matches = 0
+    for i in range(4):
+        if (int(a[i]) + int(b[i]) + int(c[i])) % 3 == 0:
+            sum_of_matches+= 1
+    if sum_of_matches == 4:
+        return True
+    else: 
+        return False
