@@ -1,21 +1,24 @@
 # linked_lists.py
 """Volume 2: Linked Lists.
-<Name>
-<Class>
-<Date>
+<Sophie Gee>
+<section 3>
+<09/29/21>
 """
 
 
 # Problem 1
 class Node:
-    """A basic node class for storing data."""
+    """A basic node class for storing data of type int, float, or str."""
     def __init__(self, data):
         """Store the data in the value attribute.
                 
         Raises:
             TypeError: if data is not of type int, float, or str.
         """
-        self.value = data
+        if isinstance(data, (int, float, str)):
+            self.value = data
+        else:
+            raise TypeError("Data type must be int, float, or string.")
 
 
 class LinkedListNode(Node):
@@ -45,6 +48,7 @@ class LinkedList:
         """
         self.head = None
         self.tail = None
+        self.size = 0
 
     def append(self, data):
         """Append a new node containing the data to the end of the list."""
@@ -61,6 +65,7 @@ class LinkedList:
             new_node.prev = self.tail               # tail <-- new_node
             # Now the last node in the list is new_node, so reassign the tail.
             self.tail = new_node
+        self.size+=1
 
     # Problem 2
     def find(self, data):
@@ -80,7 +85,13 @@ class LinkedList:
             >>> l.find('f')
             ValueError: <message>
         """
-        raise NotImplementedError("Problem 2 Incomplete")
+        i = self.head
+        while i != None:
+            if i.value == data:
+                return i
+            i = i.next
+        else: 
+            raise ValueError(f"'{data}' not found in linkedlist.")
 
     # Problem 2
     def get(self, i):
@@ -101,7 +112,13 @@ class LinkedList:
             >>> l.get(5)
             IndexError: <message>
         """
-        raise NotImplementedError("Problem 2 Incomplete")
+        if i < 0 or i > self.size:
+            raise IndexError("Index must be positive and less than size of linkedlist.")
+        else:
+            n = self.head
+            for k in range(i):
+                n = n.next
+            return n
 
     # Problem 3
     def __len__(self):
@@ -118,7 +135,7 @@ class LinkedList:
             >>> len(l)
             4
         """
-        raise NotImplementedError("Problem 3 Incomplete")
+        return self.size
 
     # Problem 3
     def __str__(self):
@@ -132,7 +149,15 @@ class LinkedList:
             >>> print(l1)               |   >>> print(l2)
             [1, 3, 5]                   |   ['a', 'b', 'c']
         """
-        raise NotImplementedError("Problem 3 Incomplete")
+        n = self.head
+        string = "["
+        for i in range(self.size):
+            if i != self.size-1:
+                string += repr(n.value)+', '
+                n = n.next
+            else:
+                string+= repr(n.value)+"]"
+        return string
 
     # Problem 4
     def remove(self, data):
@@ -150,7 +175,26 @@ class LinkedList:
             >>> print(l1)               |   >>> l3.remove(10)
             ['e', 'o']                  |   ValueError: <message>
         """
-        raise NotImplementedError("Problem 4 Incomplete")
+        target = self.find(data)
+        if target != ValueError:
+            if target is self.head:
+                target.next.prev = None
+                self.head = target.next
+            elif target is self.tail:
+                target.prev.next = None 
+                self.tail = target.prev
+            elif self.size == 1:
+                target.prev.next = None 
+                target.next.prev = None
+            else: 
+                target.prev.next = target.next
+                target.next.prev = target.prev
+                target.next = None
+                target.prev = None
+            self.size -= 1
+        else:
+            raise ValueError(f"{data} is not in linkedlist.")
+
 
     # Problem 5
     def insert(self, index, data):
@@ -174,11 +218,55 @@ class LinkedList:
             >>> print(l1)               |
             ['a', 'b', 'c', 'd']        |
         """
-        raise NotImplementedError("Problem 5 Incomplete")
-
+        new_node = LinkedListNode(data)
+        if index == self.size:
+            self.append(data)
+        elif index > self.size or index < 0:
+            raise IndexError("invalid Index")
+        elif index == 0:
+            self.head.prev = new_node
+            new_node.next = self.head
+            self.head = new_node
+        else:
+            prev_node = self.get(index)
+            next_node = prev_node.next
+            prev_node.next = new_node
+            new_node.prev = prev_node
+            new_node.next = next_node
+            next_node.prev = new_node
 
 # Problem 6: Deque class.
+class Deque(LinkedList):
+    def pop(self):
+        if self.size == 0:
+            raise ValueError("Deque is empty")
+        elif self.size == 1:
+            value = self.head.value
+            self.head = None
+            self.tail = None
+            return value
+        else:
+            value = self.tail.value
+            self.tail.prev = None
+            self.tail.prev.next = None
+            return value
+            
+    def popleft(self):
+        if self.size == 0:
+            raise ValueError("Deque is empty")
+        else:
+            value = self.head.value
+            self.remove(value)
+            return value
 
+    def appendleft(self,data):
+        self.insert(0, data)
+    
+    def remove(*args, **kwargs):
+        raise NotImplementedError("Use pop() or popleft() for removal")
+
+    def insert(*args, **kwargs):
+        raise NotImplementedError("Use append() or appendleft() for insertion")
 
 # Problem 7
 def prob7(infile, outfile):
@@ -189,4 +277,11 @@ def prob7(infile, outfile):
         infile (str): the file to read from.
         outfile (str): the file to write to.
     """
-    raise NotImplementedError("Problem 7 Incomplete")
+    with open(infile, "r") as myfile:
+        list_of_words = myfile.readlines() 
+    with open(outfile, "w") as myfile:
+        while len(list_of_words) > 0:
+            myfile.write(list_of_words.pop())
+
+if __name__ == "__main__":
+    prob7("english.txt","words.txt")
