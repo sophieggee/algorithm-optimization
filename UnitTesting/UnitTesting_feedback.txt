@@ -25,3 +25,30 @@ Comments:
 
 -------------------------------------------------------------------------------
 
+09/30/21 15:17
+
+Problem 1 (5 points):
+Score += 5
+
+Problem 4 (10 points):
+Score += 10
+
+Problem 6 (10 points):
+Score += 10
+
+Coverage (20 points):
+Score += 20
+
+Code Quality (5 points):
+Score += 5
+
+Total score: 50/50 = 100.0%
+
+Excellent!
+
+
+Comments:
+        nice!
+
+-------------------------------------------------------------------------------
+
