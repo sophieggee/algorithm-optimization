@@ -1,0 +1,56 @@
+10/05/21 17:06
+
+Problem 1 (5 points):
+Score += 5
+
+Problem 2 (5 points):
+Score += 5
+
+Problem 3 (5 points):
+LinkedList.__str__() failed
+	Correct response: '[]'
+	Student response: '['
+Score += 4
+
+Problem 4 (7 points):
+AttributeError while removing 11: 'NoneType' object has no attribute 'prev'
+	Previous list:    [11]
+AttributeError while removing 15: 'NoneType' object has no attribute 'prev'
+	Previous list:    [15]
+Score += 5
+
+Problem 5 (8 points):
+LinkedList.insert(-1, 0) failed
+	Previous list:    [10, 61, 29, 9, 17, 72]
+	Correct response: '[-1, 10, 61, 29, 9, 17, 72]'
+	Student response: '[-1, 10, 61, 29, 9, 17]'
+LinkedList.insert(-2, 1) failed
+	Previous list:    [1, 62, 94, 51, 70, 27, 29, 92]
+	Correct response: '[1, -2, 62, 94, 51, 70, 27, 29, 92]'
+	Student response: '[1, 62, -2, 94, 51, 70, 27, 29]'
+LinkedList.insert(-2, 1) failed
+	Previous list:    [15, 98, 1, 88, 92, 79]
+	Correct response: '[15, -2, 98, 1, 88, 92, 79]'
+	Student response: '[15, 98, -2, 1, 88, 92]'
+Score += 2
+
+Problem 6 (10 points):
+NotImplementedError while appendlefting 8: Use append() or appendleft() for insertion
+	Previous deque:   []
+AttributeError while poping: 'NoneType' object has no attribute 'next'
+	Previous deque:   [32, 64, 46, 86, 5]
+NotImplementedError while poplefting: Use pop() or popleft() for removal
+	Previous deque:   [30, 93, 62, 21, 46, 55, 77, 11, 26]
+Score += 4
+
+Problem 7 (5 points):
+Score += 5
+
+Code Quality (5 points):
+we are starting to grade code quality now so make sure to comment your code
+Score += 4
+
+Total score: 34/50 = 68.0%
+
+-------------------------------------------------------------------------------
+
