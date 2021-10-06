@@ -112,11 +112,11 @@ class LinkedList:
             >>> l.get(5)
             IndexError: <message>
         """
-        if i < 0 or i > self.size:
+        if i < 0 or i > self.size: #checks for edge cases before greabbing an element
             raise IndexError("Index must be positive and less than size of linkedlist.")
         else:
             n = self.head
-            for k in range(i):
+            for k in range(i): #iterates through i times
                 n = n.next
             return n
 
@@ -135,7 +135,7 @@ class LinkedList:
             >>> len(l)
             4
         """
-        return self.size
+        return self.size #storing this attribute previously
 
     # Problem 3
     def __str__(self):
@@ -149,11 +149,11 @@ class LinkedList:
             >>> print(l1)               |   >>> print(l2)
             [1, 3, 5]                   |   ['a', 'b', 'c']
         """
-        n = self.head
+        n = self.head #assigns node to the head node
         values = []
         while True:
             if n is None:
-                return str(values)
+                return str(values) #creates string of values throughout list
             values.append(n.value)
             n = n.next
 
@@ -173,16 +173,16 @@ class LinkedList:
             >>> print(l1)               |   >>> l3.remove(10)
             ['e', 'o']                  |   ValueError: <message>
         """
-        target = self.find(data)
-        if target.prev is None:
+        target = self.find(data) #tries to find target node in list using data
+        if target.prev is None: #if target does not have predecessor
             self.head = target.next
         else:
             target.prev.next = target.next
-        if target.next is None:
+        if target.next is None: #if target does not have successor
             self.tail = target.prev
         else: 
             target.next.prev = target.prev
-        self.size -= 1
+        self.size -= 1 #decriment size
 
 
     # Problem 5
@@ -207,54 +207,54 @@ class LinkedList:
             >>> print(l1)               |
             ['a', 'b', 'c', 'd']        |
         """
-        if index == self.size:
+        if index == self.size: #if they want to insert at end of list
             self.append(data)
-        if index > self.size or index < 0:
+        if index > self.size or index < 0: #checks for edge cases
             raise IndexError("invalid Index")
-        elif self.head is None or index == self.size:
+        elif self.head is None: #if list is empty
             self.append(data)
         else:
-            new_node = LinkedListNode(data)
+            new_node = LinkedListNode(data) #creates node to add
             current_node = self.get(index)
             if current_node is None:
                 self.head = new_node
             else:
-                current_node.prev.next = new_node
+                current_node.prev.next = new_node #attaches pointers of neighbors to node
                 new_node.prev = current_node.prev
             current_node.prev = new_node
             new_node.next = current_node
 
 # Problem 6: Deque class.
 class Deque(LinkedList):
-    def __init__(self):
+    def __init__(self): #creates deque class
         LinkedList.__init__(self)
 
-    def pop(self):
-        if self.head is None:
+    def pop(self): #defining pop
+        if self.head is None: #if deque is empty
             raise ValueError("Deque is empty")
         node = self.tail
-        if node.prev is not None:
+        if node.prev is not None: #if node has no predecessor 
             node.prev.next = None
             self.tail = node.prev
         else:
-            self.head = None
+            self.head = None #empty deque
             self.tail = None        
-        return node.value
+        return node.value #returns tail
             
-    def popleft(self):
+    def popleft(self): #returns beginning of deque
         node = self.head
         if node is None:
             raise ValueError("Deque is empty")
         LinkedList.remove(self, node.value)
         return node.value
 
-    def appendleft(self,data):
+    def appendleft(self,data): #appends at beginning of deque
         LinkedList.insert(self, 0, data)
     
-    def remove(*args, **kwargs):
+    def remove(*args, **kwargs): #disarms remove
         raise NotImplementedError("Use pop() or popleft() for removal")
 
-    def insert(*args, **kwargs):
+    def insert(*args, **kwargs): #disarms insert
         raise NotImplementedError("Use append() or appendleft() for insertion")
 
 # Problem 7
