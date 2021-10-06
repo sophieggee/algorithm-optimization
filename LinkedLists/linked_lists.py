@@ -150,14 +150,12 @@ class LinkedList:
             [1, 3, 5]                   |   ['a', 'b', 'c']
         """
         n = self.head
-        string = "["
-        for i in range(self.size):
-            if i != self.size-1:
-                string += repr(n.value)+', '
-                n = n.next
-            else:
-                string+= repr(n.value)+"]"
-        return string
+        values = []
+        while True:
+            if n is None:
+                return str(values)
+            values.append(n.value)
+            n = n.next
 
     # Problem 4
     def remove(self, data):
@@ -176,24 +174,15 @@ class LinkedList:
             ['e', 'o']                  |   ValueError: <message>
         """
         target = self.find(data)
-        if target != ValueError:
-            if target is self.head:
-                target.next.prev = None
-                self.head = target.next
-            elif target is self.tail:
-                target.prev.next = None 
-                self.tail = target.prev
-            elif self.size == 1:
-                target.prev.next = None 
-                target.next.prev = None
-            else: 
-                target.prev.next = target.next
-                target.next.prev = target.prev
-                target.next = None
-                target.prev = None
-            self.size -= 1
+        if target.prev is None:
+            self.head = target.next
         else:
-            raise ValueError(f"{data} is not in linkedlist.")
+            target.prev.next = target.next
+        if target.next is None:
+            self.tail = target.prev
+        else: 
+            target.next.prev = target.prev
+        self.size -= 1
 
 
     # Problem 5
@@ -218,49 +207,49 @@ class LinkedList:
             >>> print(l1)               |
             ['a', 'b', 'c', 'd']        |
         """
-        new_node = LinkedListNode(data)
         if index == self.size:
             self.append(data)
-        elif index > self.size or index < 0:
+        if index > self.size or index < 0:
             raise IndexError("invalid Index")
-        elif index == 0:
-            self.head.prev = new_node
-            new_node.next = self.head
-            self.head = new_node
+        elif self.head is None or index == self.size:
+            self.append(data)
         else:
-            prev_node = self.get(index)
-            next_node = prev_node.next
-            prev_node.next = new_node
-            new_node.prev = prev_node
-            new_node.next = next_node
-            next_node.prev = new_node
+            new_node = LinkedListNode(data)
+            current_node = self.get(index)
+            if current_node is None:
+                self.head = new_node
+            else:
+                current_node.prev.next = new_node
+                new_node.prev = current_node.prev
+            current_node.prev = new_node
+            new_node.next = current_node
 
 # Problem 6: Deque class.
 class Deque(LinkedList):
+    def __init__(self):
+        LinkedList.__init__(self)
+
     def pop(self):
-        if self.size == 0:
+        if self.head is None:
             raise ValueError("Deque is empty")
-        elif self.size == 1:
-            value = self.head.value
-            self.head = None
-            self.tail = None
-            return value
+        node = self.tail
+        if node.prev is not None:
+            node.prev.next = None
+            self.tail = node.prev
         else:
-            value = self.tail.value
-            self.tail.prev = None
-            self.tail.prev.next = None
-            return value
+            self.head = None
+            self.tail = None        
+        return node.value
             
     def popleft(self):
-        if self.size == 0:
+        node = self.head
+        if node is None:
             raise ValueError("Deque is empty")
-        else:
-            value = self.head.value
-            self.remove(value)
-            return value
+        LinkedList.remove(self, node.value)
+        return node.value
 
     def appendleft(self,data):
-        self.insert(0, data)
+        LinkedList.insert(self, 0, data)
     
     def remove(*args, **kwargs):
         raise NotImplementedError("Use pop() or popleft() for removal")
