@@ -54,3 +54,47 @@ Total score: 34/50 = 68.0%
 
 -------------------------------------------------------------------------------
 
+10/07/21 10:01
+
+Problem 1 (5 points):
+Score += 5
+
+Problem 2 (5 points):
+Score += 5
+
+Problem 3 (5 points):
+Score += 5
+
+Problem 4 (7 points):
+Score += 7
+
+Problem 5 (8 points):
+AttributeError while inserting -1: 'NoneType' object has no attribute 'next'
+	Previous list:    [11, 77, 10, 17, 76, 89]
+LinkedList.__len__() failed on list [60, -2, 88, 70, 13, 73, 25, 42]
+	Correct response: 8
+	Student response: 7
+LinkedList.__len__() failed on list [36, -2, 17, 78, 56, 38, 72, 99, 3]
+	Correct response: 9
+	Student response: 8
+LinkedList.insert(-3, 6) failed
+	Previous list:    [85, 77, 25, 64, 56, 67]
+	Correct response: '[85, 77, 25, 64, 56, 67, -3]'
+	Student response: '[85, 77, 25, 64, 56, 67, -3, -3]'
+Score += 1
+
+Problem 6 (10 points):
+AttributeError while appendlefting 85: 'NoneType' object has no attribute 'next'
+	Previous deque:   []
+Score += 8
+
+Problem 7 (5 points):
+Score += 5
+
+Code Quality (5 points):
+Score += 5
+
+Total score: 41/50 = 82.0%
+
+-------------------------------------------------------------------------------
+
