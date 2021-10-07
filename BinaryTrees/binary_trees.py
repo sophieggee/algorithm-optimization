@@ -1,14 +1,18 @@
 # binary_trees.py
 """Volume 2: Binary Trees.
-<Name>
-<Class>
-<Date>
+<Sophie Gee>
+<section3>
+<oct 6>
 """
 
 # These imports are used in BST.draw().
 import networkx as nx
+import numpy as np
+import random
+import time
+from networkx.algorithms.dag import root_to_leaf_paths
 from networkx.drawing.nx_agraph import graphviz_layout
-
+from matplotlib import pyplot as plt
 
 class SinglyLinkedListNode:
     """A node with a value and a reference to the next node."""
@@ -53,7 +57,13 @@ class SinglyLinkedList:
         Returns:
             (SinglyLinkedListNode): the node containing the data.
         """
-        raise NotImplementedError("Problem 1 Incomplete")
+        def check_node(n): #defines inner function
+            if n is None: #checks if node is none
+                raise ValueError("The data could not be found.")
+            if n.value == data: #checks if node is data
+                return n
+            return check_node(n.next) #calls on next node
+        return check_node(self.head)
 
 
 class BSTNode:
@@ -118,7 +128,30 @@ class BST:
             [1, 5, 7]                           |                  (8)
             [8]                                 |
         """
-        raise NotImplementedError("Problem 2 Incomplete")
+        
+        def _step(current,parent):
+            """Recursively step through the tree until the node containing
+            the data is found. If there is no such node, raise a Value Error.
+            """
+            if current is None:                     # Base case 1: dead end.
+                return parent
+            if data == current.value:               # Base case 2: data found!
+                raise ValueError("Data already in tree")
+            if data < current.value: # Recursively search left.
+                return _step(current.left,current)
+            else:                                   # Recursively search right.
+                return _step(current.right, current)
+            
+        if self.root is None:
+            self.root = BSTNode(data)
+        else:
+            new_node = BSTNode(data)
+            parent = _step(self.root, None)
+            new_node.prev = parent
+            if parent.value > data:
+                parent.left = new_node
+            else:
+                parent.right = new_node
 
     # Problem 3
     def remove(self, data):
@@ -151,7 +184,38 @@ class BST:
             >>> print(t2)                       | >>> t4.remove(5)
             []                                  | ValueError: <message>
         """
-        raise NotImplementedError("Problem 3 Incomplete")
+        node = BST.find(self,data)
+        def minValueNode(node):
+            current = node
+ 
+            # loop down to find the leftmost leaf of this node
+            while(current.left is not None):
+                current = current.left
+ 
+            return current #returns the left-most leaf of given node
+        node_to_delete = node.value
+        def deleteNode(root, key):
+            if root is None:
+                return root #base case
+            if key < root.value: #if node value is less than root value then put on left
+                root.left = deleteNode(root.left, key)
+            elif key > root.value: #if node value is greater than root value, put on right
+                root.right = deleteNode(root.right, key)
+            else: #keep traversing down the tree 
+                if root.left is None: #to find if has no children,
+                    k = root.right
+                    root = None
+                    return k
+                elif root.right is None:
+                    k = root.left
+                    root = None
+                    return k
+                k = minValueNode(root.right) #find the predecessor and store to replace
+                root.value = k.value
+                root.right = deleteNode(root.right, k.value)
+            return root
+        deleteNode(self.root, node_to_delete) #recursive call start
+
 
     def __str__(self):
         """String representation: a hierarchical view of the BST.
@@ -317,4 +381,75 @@ def prob4():
     structure. Plot the number of elements in the structure versus the build
     and search times. Use log scales where appropriate.
     """
-    raise NotImplementedError("Problem 4 Incomplete")
+    with open("english.txt", "r") as myfile: #open my english file and create list of the lines
+        list_of_words = myfile.readlines() 
+    domain = 2**np.arange(3,11)
+    times = []
+    times2 = []
+    times3 = []
+    
+    for n in range(3,11): #iterate through at differing sizes of n
+        single = SinglyLinkedList() #initialize structures
+        bst = BST()
+        avl = AVL()
+        subset = random.sample(list_of_words, 2**n)
+        start = time.time()
+        for i in subset: #append on list, bst, and avl
+            single.append(i)
+        times.append(time.time()-start)
+        start1 = time.time()
+        for i in subset:
+            bst.insert(i)
+        times2.append(time.time()-start1)
+        start2 = time.time()
+        for i in subset:
+            avl.insert(i)
+        times3.append(time.time()-start2)
+    plt.subplot(121) #plot first subplot
+    plt.loglog(domain, times, '.-', linewidth=2, markersize=15, label="SinglyLinkedList")
+    plt.loglog(domain, times2, '.-', linewidth=2, markersize=15, label="Binary Search Tree")
+    plt.loglog(domain, times3, '.-', linewidth=2, markersize=15, label="AVL")
+    plt.ylabel("Time taken to build each structure given lists of size x")
+    plt.xlabel("Lists size")
+    plt.title("Time Taken to Build")
+    plt.legend()
+
+
+    domain = 2**np.arange(3,11)
+    times = []
+    times2 = []
+    times3 = []
+    
+    for n in range(3,11): #iterate through differing n sizes
+        single = SinglyLinkedList() #initialize data structures
+        bst = BST()
+        avl = AVL()
+        subset = random.sample(list_of_words, 2**n)
+        random_five = random.sample(subset, 5)
+        for i in subset: #populate data structures
+            single.append(i)
+            avl.insert(i)
+            bst.insert(i)
+        start = time.time()
+        for i in random_five: #find elements in each data structure
+            single.iterative_find(i)
+        times.append(time.time()-start)
+        start1 = time.time()
+        for i in random_five:
+            bst.find(i)
+        times2.append(time.time()-start1)
+        start2 = time.time()
+        for i in random_five:
+            avl.find(i)
+        times3.append(time.time()-start2)
+
+    plt.subplot(122) #plot the second subplot
+    plt.loglog(domain, times, '.-', linewidth=2, markersize=15, label="SinglyLinkedList")
+    plt.loglog(domain, times2, '.-', linewidth=2, markersize=15, label="Binary Search Tree")
+    plt.loglog(domain, times3, '.-', linewidth=2, markersize=15, label="AVL")
+    plt.ylabel("time taken to find 5 from each list of size x")
+    plt.xlabel("Lists size")
+    plt.title("Time Taken to Find")
+    plt.legend()
+    plt.show()
+
