@@ -187,10 +187,9 @@ class BST:
         node = BST.find(self,data)
         def minValueNode(node):
             current = node
- 
             # loop down to find the leftmost leaf of this node
-            while(current.left is not None):
-                current = current.left
+            while(current.right is not None):
+                current = current.right
  
             return current #returns the left-most leaf of given node
         node_to_delete = node.value
@@ -205,14 +204,26 @@ class BST:
                 if root.left is None: #to find if has no children,
                     k = root.right
                     root = None
-                    return k
+                    if key == self.root.value:
+                        self.root=self.root.right
+                    return root
                 elif root.right is None:
                     k = root.left
                     root = None
+                    if key == self.root.value:
+                        self.root=self.root.left
+                        print("here left")
+                    return root
+                k = minValueNode(root.left) #find the predecessor and store to replace
+                if key == self.root.value:
+                    self.root.value = k.value
+                    if k.prev.right.value == k.value:
+                        k.prev.right = None
+                    else:
+                        k.prev.left = None
                     return k
-                k = minValueNode(root.right) #find the predecessor and store to replace
                 root.value = k.value
-                root.right = deleteNode(root.right, k.value)
+                root.left = deleteNode(root.left, k.value)
             return root
         deleteNode(self.root, node_to_delete) #recursive call start
 
@@ -453,3 +464,50 @@ def prob4():
     plt.legend()
     plt.show()
 
+if __name__ == "__main__":
+    nodes = [4, 2, 10, 1, 3, 5, 11, 6, 15, 9, 14, 16, 7, 12]
+
+    bst = BST()
+
+    for node in nodes:
+        bst.insert(node)
+
+    print(bst)
+    bst.remove(2)
+    print()
+    print(bst)
+
+
+    #test 2
+    nodes = np.arange(1, 7)
+    bst = BST()
+
+    for node in nodes:
+        bst.insert(node)
+
+    print(bst)
+    bst.remove(1)
+    print()
+    print(bst)
+
+
+    nodes = [6, 1, 7, 2, 3, 4, 5]
+    bst = BST()
+
+    for node in nodes:
+        bst.insert(node)
+
+    print(bst)
+    bst.remove(6)
+    print()
+    print(bst)
+
+    nodes = [10]
+    bst = BST()
+    for node in nodes:
+        bst.insert(node)
+
+    print(bst)
+    bst.remove(10)
+    print()
+    print(bst)
