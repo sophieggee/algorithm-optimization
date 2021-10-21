@@ -203,26 +203,46 @@ class BST:
             else: #keep traversing down the tree 
                 if root.left is None: #to find if has no children,
                     k = root.right
+                    print("here line 206")
                     root = None
+                    print("here line 207")
                     if key == self.root.value:
                         self.root=self.root.right
+                        print("here line 209")
                     return root
                 elif root.right is None:
                     k = root.left
-                    root = None
+                    if root.prev.right is root:
+                        root.prev.right = k
+                        k.prev = root.prev
+                        root.left = None
+                        #print(k.prev.right.value)
+                        #root = None
+                        
+                    elif root.prev.left is root:
+                        root.prev.left = k
+                        k.prev = root.prev
+                        root.prev.left = None
+                        #root = None
+                    #print(k.value, root.prev.left.value)
                     if key == self.root.value:
                         self.root=self.root.left
                         print("here left")
+
                     return root
                 k = minValueNode(root.left) #find the predecessor and store to replace
                 if key == self.root.value:
                     self.root.value = k.value
+                    print("here line 225")
                     if k.prev.right.value == k.value:
                         k.prev.right = None
+                        print("here line 225")
                     else:
                         k.prev.left = None
+                        print("here line 228")
                     return k
                 root.value = k.value
+                print("here line 234")
                 root.left = deleteNode(root.left, k.value)
             return root
         deleteNode(self.root, node_to_delete) #recursive call start
@@ -473,41 +493,8 @@ if __name__ == "__main__":
         bst.insert(node)
 
     print(bst)
-    bst.remove(2)
+    bst.remove(9)
     print()
     print(bst)
 
-
-    #test 2
-    nodes = np.arange(1, 7)
-    bst = BST()
-
-    for node in nodes:
-        bst.insert(node)
-
-    print(bst)
-    bst.remove(1)
-    print()
-    print(bst)
-
-
-    nodes = [6, 1, 7, 2, 3, 4, 5]
-    bst = BST()
-
-    for node in nodes:
-        bst.insert(node)
-
-    print(bst)
-    bst.remove(6)
-    print()
-    print(bst)
-
-    nodes = [10]
-    bst = BST()
-    for node in nodes:
-        bst.insert(node)
-
-    print(bst)
-    bst.remove(10)
-    print()
-    print(bst)
+ 
