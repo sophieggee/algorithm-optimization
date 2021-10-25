@@ -8,7 +8,7 @@
 import numpy as np
 from scipy import linalg as la
 from scipy import stats
-
+from scipy.spatial import KDTree
 
 # Problem 1
 def exhaustive_search(X, z):
@@ -39,7 +39,7 @@ class KDTNode:
     """
     def __init__(self,x):
         if type(x) is not np.ndarray:
-            raise ValueError("X must be type ndarray.")
+            raise TypeError("X must be type ndarray.")
         else:
             self.value = x
             self.left = None
@@ -200,8 +200,8 @@ class KNeighborsClassifier:
 
     def predict(self, z):
         min_distance, index = self.tree.query(z, k= self.neighbors)
-        labels = self.labels[index]
-        return stats.mode(labels)[0]
+        labels = [self.labels[x] for x in index]
+        return stats.mode(labels)
 # Problem 6
 def prob6(n_neighbors, filename="mnist_subset.npz"):
     """Extract the data from the given file. Load a KNeighborsClassifier with
@@ -218,29 +218,21 @@ def prob6(n_neighbors, filename="mnist_subset.npz"):
         (float): the classification accuracy.
     """
     data = np.load("mnist_subset.npz")
-    X_train = data["X_train"].astype(np.float)
+    X_train = data["X_train"].astype(float)
     y_train = data["y_train"]
-    X_test = data["X_test"].astype(np.float)
+    X_test = data["X_test"].astype(float)
     y_test = data["y_test"]
     classifier = KNeighborsClassifier(n_neighbors)
-    classifier.fit(X_train, y_train).predict(X_test)
+    classifier.fit(X_train, y_train)
+    results = []
+    for image in X_test:
+        results.append(classifier.predict(image)[0][0])
+    num_correct = 0
+    for i in range(len(results)):
+        if results[i] == y_test[i]:
+            num_correct += 1
+    percentage = ((num_correct)/len(y_test))*100
+    return percentage
 
 if __name__ == "__main__":
-    from scipy.spatial import KDTree
-# Initialize the tree with data (in this example, use random data).
-    data = np.random.random((100,5))    # 100 5-dimensional points.
-    target = np.random.random(5)
-    tree = KDTree(data)
-# Query the tree for the nearest neighbor and its distance from 'target'.
-    min_distance, index = tree.query(target)
-    print(min_distance)
-    print(tree.data[index])
-    tree2 = KDT()
-    for i in data:
-        tree2.insert(i)
-    # Query the tree for the nearest neighbor and its distance from 'target'.
-    min_distance, index = tree2.query(target)
-    print(min_distance)
-    print(index)
-
-    #print(tree)
+    print(prob6(4))
