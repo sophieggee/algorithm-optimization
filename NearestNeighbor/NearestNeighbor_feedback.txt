@@ -26,3 +26,38 @@ Total score: 30/50 = 60.0%
 
 -------------------------------------------------------------------------------
 
+10/26/21 10:51
+
+Problem 1 (5 points):
+Score += 5
+
+Problem 2 (5 points):
+Score += 5
+
+Problem 3 (10 points):
+Score += 10
+
+Problem 4 (10 points):
+Score += 10
+
+Problem 5 (10 points):
+KNeighborsClassifier failed to predict correctly on a 10x5 dataset
+KNeighborsClassifier failed to predict correctly on a 10x10 dataset
+KNeighborsClassifier failed to predict correctly on a 20x5 dataset
+KNeighborsClassifier failed to predict correctly on a 20x10 dataset
+KNeighborsClassifier failed to predict correctly on a 50x5 dataset
+KNeighborsClassifier failed to predict correctly on a 50x10 dataset
+KNeighborsClassifier failed to predict correctly on a 100x5 dataset
+KNeighborsClassifier failed to predict correctly on a 100x10 dataset
+Score += 2
+
+Problem 6 (5 points):
+TypeError: 'numpy.int64' object is not iterable
+
+Code Quality (5 points):
+Score += 5
+
+Total score: 37/50 = 74.0%
+
+-------------------------------------------------------------------------------
+
