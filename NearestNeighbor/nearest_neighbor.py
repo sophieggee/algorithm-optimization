@@ -200,8 +200,8 @@ class KNeighborsClassifier:
 
     def predict(self, z):
         min_distance, index = self.tree.query(z, k= self.neighbors)
-        labels = [self.labels[x] for x in index]
-        return stats.mode(labels)
+        labels = self.labels[index]
+        return stats.mode(labels)[0][0]
 # Problem 6
 def prob6(n_neighbors, filename="mnist_subset.npz"):
     """Extract the data from the given file. Load a KNeighborsClassifier with
@@ -217,7 +217,7 @@ def prob6(n_neighbors, filename="mnist_subset.npz"):
     Returns:
         (float): the classification accuracy.
     """
-    data = np.load("mnist_subset.npz")
+    data = np.load(filename)
     X_train = data["X_train"].astype(float)
     y_train = data["y_train"]
     X_test = data["X_test"].astype(float)
@@ -226,13 +226,13 @@ def prob6(n_neighbors, filename="mnist_subset.npz"):
     classifier.fit(X_train, y_train)
     results = []
     for image in X_test:
-        results.append(classifier.predict(image)[0][0])
+        results.append(classifier.predict(image))
     num_correct = 0
     for i in range(len(results)):
         if results[i] == y_test[i]:
             num_correct += 1
-    percentage = ((num_correct)/len(y_test))*100
+    percentage = ((num_correct)/len(y_test))
     return percentage
 
 if __name__ == "__main__":
-    print(prob6(4))
+    print(prob6(1))
