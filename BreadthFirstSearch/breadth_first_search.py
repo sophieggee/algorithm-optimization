@@ -7,6 +7,7 @@
 
 import collections
 import networkx as nx
+import numpy as np
 from matplotlib import pyplot as plt
 # Problems 1-3
 class Graph:
@@ -47,6 +48,10 @@ class Graph:
             u: a node label.
             v: a node label.
         """
+        if u not in self.d.keys():
+            self.add_node(u)
+        if v not in self.d.keys():
+            self.add_node(v)
         self.d[u].update(v)
         self.d[v].update(u)
         
@@ -134,22 +139,34 @@ class Graph:
         Raises:
             KeyError: if the source or target nodes are not in the graph.
         """
+        #check to see if the source is in the graph
         if source not in self.d.keys():
             raise KeyError("Source node not in graph")
+
+        #check to see if the target is in the graph
         if target not in self.d.keys():
             raise KeyError("Target node not in graph")
+
+        #both in the graph, create the variables assigned below
         else:
             V = []
             Q = collections.deque()
             M = {source}
             P = {}
 
+            #put the source on the beginning of a queue
             Q.appendleft(source)
+
+            #while not everything is popped off of the Q
             while Q:
+                #set A to last element in the queue
                 A = Q.pop()
+                #add A to list of visited nodes
                 V.append(A)
                 if A == target:
+                    #if A is the target, it has been found and the path is A
                     S = [A]
+                    #go through S to 
                     while source not in S: 
                         S.append(P[A])
                         A = P[A]
@@ -160,6 +177,7 @@ class Graph:
                         Q.appendleft(edge)
                         M.update(edge)
                         P[edge] = A
+
            
 
 
@@ -221,15 +239,13 @@ class MovieGraph:
         Returns:
             (float): the average path length from actor to target.
         """
-        length = nx.shortest_path_length(self.graph, target)
-        lengths = list(length.values())
-        new_lens = [length//2 for length in lengths]
+        all_paths = nx.shortest_path_length(self.graph,target)               
+        new_lens = [all_paths[i] // 2 for i in self.chars]
         plt.hist(new_lens, bins=[i-.5 for i in range(8)])
         plt.show()
-        return sum(new_lens)/len(new_lens)
+        return np.mean(new_lens)
 
 
 if __name__ == "__main__":
-    movies = MovieGraph()
-    
-    print(movies.average_number("Kevin Bacon"))
+    g = MovieGraph()
+    print(g.average_number('Kevin Bacon'))
