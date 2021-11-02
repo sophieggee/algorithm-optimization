@@ -1,0 +1,30 @@
+10/29/21 22:23
+
+Problem 1 (5 points):
+KeyError: 'h'
+
+Problem 2 (10 points):
+Score += 10
+
+Problem 3 (10 points):
+ValueError: No path from 'A' to 'D'
+
+Problem 5 (10 points):
+Score += 10
+
+Problem 6 (10 points):
+MovieGraph.average_number('Kevin Bacon') failed
+Score += 5
+
+Code Quality (5 points):
+Graph.shortest_path() has no code documentation (comments)
+Score += 2
+
+Total score: 27/50 = 54.0%
+
+
+Comments:
+	Your problem 6 had the correct histogram, but returned the incorrect average path length
+
+-------------------------------------------------------------------------------
+
