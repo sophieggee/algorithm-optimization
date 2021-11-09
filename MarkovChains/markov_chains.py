@@ -212,6 +212,7 @@ class SentenceGenerator(MarkovChain):
             words = (sent.split())
             words.insert(0, "$tart")
             words.append("$top")
+            
            
             for i in range(len(words)-1):
                 currentword = words[i]
@@ -219,13 +220,14 @@ class SentenceGenerator(MarkovChain):
                 ind = self.dict[currentword]
                 nextind = self.dict[nextword]
                 A[nextind,ind] += 1
+                
         
         #make sure stop transitions to stop
         A[n-1,n-1] =1
-
+        A = A.astype(float)
         #normalize A
         A/=A.sum(axis=0)
-
+        
         self.mat = A
 
 
@@ -247,8 +249,8 @@ class SentenceGenerator(MarkovChain):
         path = path[1:-1]
         babble = " ".join(path)
         #print(np.argwhere(np.isnan(self.dict)))
-        print(np.argwhere(np.isnan(self.mat)))
-        print([[self.mat[i,j]for i in range(self.mat.shape[0]) if self.mat[i,j] > 1]for j in range(self.mat.shape[1])])
+        #print(np.argwhere(np.isnan(self.mat)))
+        #print([[self.mat[i,j]for i in range(self.mat.shape[0]) if self.mat[i,j] > 1]for j in range(self.mat.shape[1])])
         return babble
 
 if __name__ == "__main__":
