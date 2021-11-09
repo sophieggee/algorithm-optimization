@@ -188,19 +188,19 @@ class SentenceGenerator(MarkovChain):
         
         #create a set of the words, adding start and stop
         self.words = set(self.contents.split())
-        self.words = list(self.words)
-        self.words.insert(0, '$tart')
-        self.words.append('$top')
+        self.labels = list(self.words)
+        self.labels.insert(0, '$tart')
+        self.labels.append('$top')
 
-        self.states = self.words
-        self.dict = {word: i for i,word in enumerate(self.words)}
+        self.states = self.labels
+        self.dict = {self.labels[i]: i for i in range(len(self.labels))}
         
 
         #initialize sentence
         self.sentence = self.contents.split('\n')
 
         #set zero matrix
-        n = len(self.words)
+        n = len(self.labels)
         A = np.zeros((n,n))
         self.n = n
         self.sentence = self.sentence[:-1]
@@ -209,8 +209,8 @@ class SentenceGenerator(MarkovChain):
         # Split the sentence into a list of words.
         # Prepend "$tart" and append "$top" to the list of words.
         for sent in self.sentence:
-            words = ["$tart"]
-            words +=(sent.split(' '))
+            words = (sent.split())
+            words.insert(0, "$tart")
             words.append("$top")
            
             for i in range(len(words)-1):
@@ -221,11 +221,10 @@ class SentenceGenerator(MarkovChain):
                 A[nextind,ind] += 1
         
         #make sure stop transitions to stop
-        A[n-1,n-1] +=1
+        A[n-1,n-1] =1
 
         #normalize A
-        for i in range(n):
-            A[:,i] = A[:,i]/np.sum(A[:,i])
+        A/=A.sum(axis=0)
 
         self.mat = A
 
@@ -247,7 +246,9 @@ class SentenceGenerator(MarkovChain):
         path = self.path("$tart","$top")
         path = path[1:-1]
         babble = " ".join(path)
-
+        #print(np.argwhere(np.isnan(self.dict)))
+        print(np.argwhere(np.isnan(self.mat)))
+        print([[self.mat[i,j]for i in range(self.mat.shape[0]) if self.mat[i,j] > 1]for j in range(self.mat.shape[1])])
         return babble
 
 if __name__ == "__main__":
