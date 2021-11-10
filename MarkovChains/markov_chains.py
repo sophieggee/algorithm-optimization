@@ -203,7 +203,7 @@ class SentenceGenerator(MarkovChain):
         n = len(self.labels)
         A = np.zeros((n,n))
         self.n = n
-        self.sentence = self.sentence[:-1]
+        #self.sentence = self.sentence[:-1]
         
         #for each sentence in the training set do: 
         # Split the sentence into a list of words.
@@ -221,7 +221,6 @@ class SentenceGenerator(MarkovChain):
                 nextind = self.dict[nextword]
                 A[nextind,ind] += 1
                 
-        
         #make sure stop transitions to stop
         A[n-1,n-1] =1
         A = A.astype(float)
@@ -254,6 +253,6 @@ class SentenceGenerator(MarkovChain):
         return babble
 
 if __name__ == "__main__":
-    yoda = SentenceGenerator("yoda.txt")
+    yoda = SentenceGenerator("alpha.txt")
     print(yoda.babble())
     
