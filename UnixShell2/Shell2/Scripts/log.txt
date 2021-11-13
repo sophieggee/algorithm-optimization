@@ -1,3 +1,0 @@
-[1]   Running                 ./Scripts/script1 &
-[2]-  Running                 ./Scripts/script2 &
-[3]+  Running                 ./Scripts/script3 &
