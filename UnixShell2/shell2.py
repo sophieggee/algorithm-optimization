@@ -53,7 +53,9 @@ def largest_files(n):
     #write smallest n to smallest.txt file
     with open("smallest.txt", "w") as f:
         f.write(largest_n[-1][0])
-    return [i[1] for i in largest_n]
+
+    #return list of n largest
+    return [i[1][2:] for i in largest_n]
     
 # Problem 6    
 def prob6(n = 10):
@@ -82,4 +84,4 @@ def prob6(n = 10):
    return integerCounter, twoCounter, threeCounter
 
 if __name__ == "__main__":
-    print(largest_files(3))
+    print(largest_files(10))
