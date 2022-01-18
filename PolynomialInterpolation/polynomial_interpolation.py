@@ -69,12 +69,12 @@ class Barycentric:
         self.y = yint
 
         #compute weights
-        w = np.ones(n)                  
+        w = np.ones(self.n)                  
         # Array for storing barycentric weights.
         # Calculate the capacity of the interval.
         C = (np.max(xint) - np.min(xint)) / 4
-        shuffle = np.random.permutation(n-1)
-        for j in range(n):
+        shuffle = np.random.permutation(self.n-1)
+        for j in range(self.n):
             temp = (xint[j] - np.delete(xint, j)) / C
             temp = temp[shuffle]        # Randomize order   of product.
             w[j] /= np.product(temp)
@@ -93,7 +93,7 @@ class Barycentric:
         """
         def p(x):
             n = np.array([self.w[j]*self.y[j]/(x-self.x[j] + 10e-14) for j in range(self.n)])
-            d = n = np.array([self.w[j]/(x-self.x[j] + 10e-14) for j in range(self.n)])
+            d = np.array([self.w[j]/(x-self.x[j] + 10e-14) for j in range(self.n)])
             return np.sum(n)/np.sum(d)
 
         #matrix multiplication
@@ -120,7 +120,7 @@ class Barycentric:
         # Calculate the capacity of the interval.
         C = (np.max(xint) - np.min(xint)) / 4
         shuffle = np.random.permutation(self.n-1)
-        for j in range(n):
+        for j in range(self.n):
             temp = (xint[j] - np.delete(xint, j)) / C
             temp = temp[shuffle]        # Randomize order   of product.
             w[j] /= np.product(temp)
@@ -137,11 +137,13 @@ def prob5():
     #define domain x of 400 equally spaced points [-1,1]
     domain = np.linspace(-1,1,400)
 
-
+    #get the powers list of 2**i as well as arrays for errors
     powers = [2**i for i in range(2,9)]
     err_z = np.zeros(7)
     err_e = np.zeros(7)
     i = 0
+
+    #go through each power and calc two errors, add to arrays
     for n in powers:
         runge = lambda x: 1 / ( 1 + 25 * x ** 2)
         x = np.linspace(-1, 1, n)
@@ -154,8 +156,10 @@ def prob5():
         err_e[i] = la.norm(runge(domain) -poly_2(domain), ord=np.inf)
         i+=1
 
+    #plot the errors with respect to the ns and in loglog
     plt.loglog(powers, err_z, label = "errors of equally spaced points")
     plt.loglog(powers, err_e, label="errors of extremals")
+    plt.title("errors vs n powers")
     plt.legend()
     plt.show()
 
@@ -205,6 +209,7 @@ def prob7(n):
     temp = np.abs(points - domain.reshape(8784, 1))
     temp2 = np.argmin(temp, axis=0)
     
+    #plot the baryncentric and original function of data
     poly = BarycentricInterpolator(domain[temp2], data[temp2])
     a1 = plt.subplot(121)
     a1.plot(domain, poly(domain) ,label="baryncentric interpolation")
@@ -216,7 +221,7 @@ def prob7(n):
 
 
 if __name__ == "__main__":
-    """n = 5
+    n = 5
     runge = lambda x: 1 / ( 1 + 25 * x ** 2)
     x = np.linspace(-1, 1, n)
     y = runge(x)
@@ -225,6 +230,4 @@ if __name__ == "__main__":
     plt.plot(domain, runge(domain), 'c-', label='Original')
     plt.plot(domain, output(domain), 'r-', label='Interpolation')
     plt.legend(loc='best')
-    plt.show() """
-
-    prob7(50)
+    plt.show() 
