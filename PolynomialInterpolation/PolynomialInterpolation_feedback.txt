@@ -1,0 +1,28 @@
+01/18/22 09:06
+
+Problems 1-2 (5 points):
+Score += 5
+
+Problem 3 (10 points):
+NameError: name 'n' is not defined
+
+Problem 4 (5 points):
+NameError: name 'n' is not defined
+
+Problem 5 (10 points):
+Title your plot!
+Score += 9
+
+Problem 6 (5 points):
+Score += 5
+
+Problem 7 (10 points):
+Score += 10
+
+Code Quality (5 points):
+Score += 5
+
+Total score: 34/50 = 68.0%
+
+-------------------------------------------------------------------------------
+
