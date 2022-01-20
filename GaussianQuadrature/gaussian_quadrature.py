@@ -43,8 +43,7 @@ class GaussianQuadrature:
             self.w_x = lambda x: np.sqrt(1-x**2)
 
         #store weights and points
-        self.p = self.points_weights(n)[0]
-        self.w = self.points_weights(n)[1]
+        self.p, self.w = self.points_weights(n)
         
 
     # Problem 2
@@ -62,7 +61,7 @@ class GaussianQuadrature:
         if self.label == "legendre":
             B = [(k**2)/((4*k**2)-1) for k in range(1,n)]
         elif self.label == "chebyshev":
-            B = np.full(n, 1/4)
+            B = np.full(n-1, 1/4)
             B[0] = 1/2
         
         #construct Jacobi matrix
@@ -71,8 +70,8 @@ class GaussianQuadrature:
         Jacobi = J+J1
 
         #compute eigenvalues and vectors of J
-        X = la.eigh(Jacobi)[0]
-        V = la.eigh(Jacobi)[1]
+        X = la.eig(Jacobi)[0]
+        V = la.eig(Jacobi)[1]
     
         #compute the weights
         if self.label == "legendre":
@@ -157,7 +156,7 @@ def prob5():
     scipy.integrate.quad() (which doesn’t depend on n).
     """
     #define f 
-    f = lambda x: (1/np.sqrt(2*np.pi))*np.exp((-x**2)/2)
+    f = lambda x: (1/np.sqrt(2*np.pi))*np.exp(-(x**2)/2)
 
     #calculate real value of integral
     true_val = norm.cdf(2)-norm.cdf(-3)
@@ -166,6 +165,7 @@ def prob5():
     leg_err = []
     cheb_err = []
     n = np.linspace(5,50,10)
+
     for i in n:
         #calculate the values and errors with legendre
         poly = GaussianQuadrature(int(i), "legendre")
@@ -191,8 +191,5 @@ def prob5():
     plt.show()
 
 if __name__ == "__main__":
-    f = lambda x, y: np.sin(x) + np.cos(y)
-    poly = GaussianQuadrature(50, "chebyshev")
-    print(nquad(f, [[-10,10],[-1,1]])[0])
-    print(poly.integrate2d(f, -10,10,-1,1))
+    prob5()
 
