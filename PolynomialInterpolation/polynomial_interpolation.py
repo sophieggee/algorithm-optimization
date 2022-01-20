@@ -121,7 +121,7 @@ class Barycentric:
         C = (np.max(xint) - np.min(xint)) / 4
         shuffle = np.random.permutation(self.n-1)
         for j in range(self.n):
-            temp = (xint[j] - np.delete(xint, j)) / C
+            temp = (self.x[j] - np.delete(self.x, j)) / C
             temp = temp[shuffle]        # Randomize order   of product.
             w[j] /= np.product(temp)
         self.w = w
@@ -221,13 +221,19 @@ def prob7(n):
 
 
 if __name__ == "__main__":
-    n = 5
-    runge = lambda x: 1 / ( 1 + 25 * x ** 2)
-    x = np.linspace(-1, 1, n)
-    y = runge(x)
-    domain = np.linspace(-1, 1, 100)
-    output = Barycentric(x, y)
-    plt.plot(domain, runge(domain), 'c-', label='Original')
-    plt.plot(domain, output(domain), 'r-', label='Interpolation')
+    n = 11
+    runge = lambda x: 1 / (1 + 25 * x ** 2)
+    xvals_original = np.linspace(-1, 1, n)
+    xvals_1 = xvals_original[1::2]
+    xvals_2 = xvals_original[::2]
+    domain = np.linspace(-1, 1, 1000)
+    bary = Barycentric(xvals_1, runge(xvals_1))
+
+    bary_2 = Barycentric(xvals_original, runge(xvals_original))
+    plt.plot(domain, bary_2(domain), linewidth=6, label='Not added')
+    plt.plot(domain, runge(domain), label='Original')
+    plt.plot(domain, bary(domain), label='Odd Points, n = ' + str(n))
+    bary.add_weights(xvals_2, runge(xvals_2))
+    plt.plot(domain, bary(domain), 'k', label='All points, n = ' + str(n))
     plt.legend(loc='best')
-    plt.show() 
+    plt.show()
