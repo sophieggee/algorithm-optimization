@@ -122,7 +122,7 @@ class Barycentric:
         shuffle = np.random.permutation(self.n-1)
         for j in range(self.n):
             temp = (self.x[j] - np.delete(self.x, j)) / C
-            temp = temp[shuffle]        # Randomize order   of product.
+            temp = temp[shuffle] #Randomize order of product.
             w[j] /= np.product(temp)
         self.w = w
 
