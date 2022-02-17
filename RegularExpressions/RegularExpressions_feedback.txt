@@ -34,3 +34,39 @@ Great job!
 
 -------------------------------------------------------------------------------
 
+02/17/22 09:55
+
+Problem 1 (5 points):
+Score += 5
+
+Problem 2 (5 points):
+Score += 5
+
+Problem 3 (5 points):
+Score += 5
+
+Problem 4 (5 points):
+'a test' matches but should not
+'____ ____' matches but should not
+'a space' matches but should not
+'pattern = r'^one|two fish\$'' matches but should not
+Score += 4
+
+Problem 5 (5 points):
+prob5() failed
+	Correct response: 'for _ in range(5):\n            if x > 10:\n                try:\n                    x /= 2\n                except ValueError as e:\n                    print(e)\n                except:\n                    print(x)\n                finally:\n                    x += 1\n            elif x == 5:\n                x = 6\n            else:\n                while x < 4:\n                    x += 2\n        def func():\n            pass\n        class something:\n            pass'
+	Student response: 'for _ in range(5):\n            if x > 10:\n                try:\n                    x /= 2\n                except ValueError as e:\n                    print(e)\n                except:\n                    print(x)\n                finally:\n                    x += 1\n            elif x == 5:\n                x = 6\n            else:\n                while x < 4:\n                    x += 2\n        def func():\n            pass\n        class something\n            pass'
+Score += 2
+
+Problem 6 (20 points):
+Score += 20
+
+Code Quality (5 points):
+Score += 5
+
+Total score: 46/50 = 92.0%
+
+Great job!
+
+-------------------------------------------------------------------------------
+
