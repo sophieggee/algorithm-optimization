@@ -1,0 +1,15 @@
+02/28/22 20:34
+
+Problems 1-5 (35 points):
+IndexError: list index out of range
+
+Problem 6 (10 points):
+Score += 10
+
+Code Quality (5 points):
+Score += 5
+
+Total score: 15/50 = 30.0%
+
+-------------------------------------------------------------------------------
+
