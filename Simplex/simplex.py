@@ -61,7 +61,7 @@ class SimplexSolver(object):
         """
         #choose first occurance of negative
         negative = [i for i, j in enumerate(self.dict[0]) if j < 0]
-        if len(negative) == 1:
+        if len(negative) <= 1:
             return False
         return negative[1]
         
@@ -188,3 +188,13 @@ def prob6(filename='productMix.npz'):
         vals.append(dep_dict[i])
         
     return vals
+
+if __name__ == "__main__":
+    c = np.array([3., 2.])
+    A = np.array([[1., -1.],
+                [3.,  1.],
+                [4.,  3.]])
+    b = np.array([2., 5., 7.])
+    solver = SimplexSolver(c, A, b)
+    sol = solver.solve()
+    print(sol)
