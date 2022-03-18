@@ -1,8 +1,7 @@
 # interior_point_linear.py
 """Volume 2: Interior Point for Linear Programs.
-<Name>
-<Class>
-<Date>
+<Sophie Gee>
+<03/16/22                                                                       >
 """
 
 import numpy as np
@@ -80,7 +79,25 @@ def interiorPoint(A, b, c, niter=20, tol=1e-16, verbose=False):
         x ((n, ) ndarray): The optimal point.
         val (float): The minimum value of the objective function.
     """
-    raise NotImplementedError("Problems 1-4 Incomplete")
+    m, n = A.shape()
+    #set first two rows of DF
+    DF_1 = np.array([np.zeros((n, n)), A.T, np.eye(n)])
+    DF_2 = np.array([A, np.zeros((m, m)), np.zeros((m, m))])
+
+    def vector_f(x, lam, mu):
+        #create rows of F and row_stack to return F
+        F_1 = np.array([A.T@lam + mu - c])
+        F_2 = np.array([A@x - b])
+        F_3 = np.array([np.diag(mu)@x])
+
+        F = np.row_stack((F_1, F_2, F_3))
+        return F
+
+    def search_direction():
+        DF_1 = np.array([np.zeros((n, n)), A.T, np.eye(n)])
+        DF_2 = np.array([A, np.zeros((m, m)), np.zeros((m, m))])
+        DF_3 = np.array([np.diag(mu), np.zeros()])
+    return tol
 
 
 def leastAbsoluteDeviations(filename='simdata.txt'):
