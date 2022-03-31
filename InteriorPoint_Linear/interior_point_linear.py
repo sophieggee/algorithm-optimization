@@ -4,6 +4,7 @@
 <03/16/22                                                                       >
 """
 
+from os import X_OK
 import numpy as np
 from pyrsistent import b
 import scipy.linalg as la
@@ -85,7 +86,7 @@ def interiorPoint(A, b, c, niter=20, tol=1e-16, verbose=False):
     """
     m, n = A.shape
 
-    x, lam, mu = starting_point(A, b, c)
+    x_, lam_, mu_ = starting_point(A, b, c)
 
     def vector_f(x, lam, mu):
         # create rows of F and row_stack to return F
@@ -101,54 +102,54 @@ def interiorPoint(A, b, c, niter=20, tol=1e-16, verbose=False):
         DF = np.block([[np.zeros((n,n)), A.T, np.eye(n)],
                        [A, np.zeros((m,m)), np.zeros((m,n))],
                        [np.diag(mu), np.zeros((n,m)), np.diag(x)]])
-        v = (x.T@mu) / n
+        v = np.dot(x, mu) / n
         ove = np.hstack((np.zeros(n), np.zeros(m), (v/10.0)*np.ones(n)))
         b = -F + ove
 
         return la.lu_solve(la.lu_factor(DF), b), v
 
-    def step_size(mu, x, lam, delta):
+    def step_size(lam, mu, x, delta):
         # gather delta x, lam, mu
         delta_x = delta[:n]
-        delta_lam = delta[n:-n]
-        delta_mu = delta[-n:]
+        delta_lam = delta[n:n+m]
+        delta_mu = delta[n+m:]
 
         # mask them and min
-        if min(delta_mu) >= 0:
+        if np.all(mu >= 0):
             alpha_max = 1
         else:
-            new_mu = ma.masked_less(delta_mu, 0)
-            alpha_max = np.min(-mu / new_mu)
-        if min(delta_x) >= 0:
+            new_mu = delta_mu < 0
+            alpha_max = np.min(-mu[new_mu] / delta_mu[new_mu])
+        if np.all(x >= 0):
             delta_max= 1
         else:
-            new_x = ma.masked_less(delta_x, 0)
-            delta_max = np.min(-x / new_x)
+            new_x = delta_x < 0
+            delta_max = np.min(-x[new_x] / delta_x[new_x])
 
         # final alpha and delta
         alpha = max(1, .95*alpha_max)
         d = max(1, .95*delta_max)
 
-        x = x + d*delta_x
-        lam = lam + alpha*delta_lam
-        mu = mu + alpha*delta_mu
-
-        return x, lam, mu
+        return alpha, d, delta_x, delta_lam, delta_mu
 
     # run the iteration niter times or until the duality measure is less than tol and return optimal values
     for _ in range(niter):
 
-        F = vector_f(x, lam, mu)
+        F = vector_f(x_, lam_, mu_)
 
-        direction, measure = search_direction(F, x, mu)
-
+        direction, measure = search_direction(F, x_, mu_)
+        #print(direction)
         #checking measure with tolerance
         if measure <= tol:
-            return x, c.T@x
-        x, lam, mu = step_size(mu, x, lam, direction)
+            return x_, np.dot(c, x_)
+        alpha, d, d_x, d_lam, d_mu = step_size(lam_, mu_, x_, direction)
+
+        x_ = x_ + d*d_x
+        lam_ = lam_ + alpha*d_lam
+        mu_ = mu_ + alpha*d_mu
         
 
-    return x, c.T@x
+    return x_, np.dot(c, x_)
 
 
 def leastAbsoluteDeviations(filename='simdata.txt'):
@@ -198,9 +199,37 @@ def leastAbsoluteDeviations(filename='simdata.txt'):
     plt.show()
 
 if __name__ == "__main__":
-   leastAbsoluteDeviations()
+    def test():
 
-    # from scipy.stats import linregress
-    # slope, intercept = linregress(data[:,1], data[:,0])[:2]
-    # domain = np.linspace(0,10,200)
-    # plt.plot(domain, domain*slope + intercept)
+        total = 350
+
+        total_passed = 0
+
+        for _ in range(200):
+            m = np.random.randint(3, 10)
+            n = m
+            A, b, c, x = randomLP(m, n)
+            point, value = interiorPoint(A, b, c)
+            if np.allclose(x, point[:n]):
+                total_passed +=1
+        print(total_passed)
+        for _ in range(150):
+            n = np.random.randint(3, 10)
+            m = np.random.randint(n, 20)
+            A, b, c, x = randomLP(m, n)
+            point, value = interiorPoint(A, b, c)
+            if np.allclose(x, point[:n]):
+                total_passed +=1
+        print(total_passed)
+        assert total_passed == total
+
+    A = np.load('A.npy')
+    m, n = A.shape
+    b = np.load('b.npy')
+    c = np.load('c.npy')
+    x = np.load('x.npy')
+
+#interiorPoint(A, b, c)
+#print(np.allclose(interiorPoint(A, b, c)[0], x))
+#print(test())
+leastAbsoluteDeviations()
