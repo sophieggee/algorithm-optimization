@@ -62,6 +62,8 @@ def graph_stopping_times(M):
     plt.legend()
     plt.show()
 
+    return percentages[-1]
+
 
 
 # Problem 3
@@ -161,4 +163,4 @@ def find_policy(T, N, B, u=np.sqrt):
 
 
 if __name__ == "__main__":
-    print(find_policy(T = 3, N = 4, B = .9, u = np.sqrt))
+    print(graph_stopping_times(1000))
