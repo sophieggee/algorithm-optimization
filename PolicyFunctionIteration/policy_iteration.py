@@ -129,20 +129,22 @@ def compute_policy_v(P, nS, nA, policy, beta=1.0, tol=1e-8):
         for s in range(nS):
 
             sa = 0
-            a = policy[s]
-
-            for tuple_info in P[s][a]:
-                # tuple_info is a tuple of (probability, next state, reward, done)
-                p, s_, u, _ = tuple_info
-                # sums up the possible end states and rewards with given action
-                sa += (p * (u + beta * policy[s_]))
-            #add the max value to the value function
+            a = int(policy[s])
+            if a not in P[s]:
+                V_k_1[s] = 0
+            else:
+                for tuple_info in P[s][a]:
+                    # tuple_info is a tuple of (probability, next state, reward, done)
+                    p, s_, u, _ = tuple_info
+                    # sums up the possible end states and rewards with given action
+                    sa += (p * (u + beta * policy[s_]))
+                #add the max value to the value function
             V_k_1[s] = sa
 
         if la.norm(V_k_1 - V_k) < tol:
             return V_k_1
             
-        V_k = V_k_1
+        V_k = V_k_1.copy()
 
 # Problem 4
 def policy_iteration(P, nS, nA, beta=1, tol=1e-8, maxiter=200):
@@ -162,7 +164,7 @@ def policy_iteration(P, nS, nA, beta=1, tol=1e-8, maxiter=200):
         policy (ndarray): which direction to move in each square.
         n (int): number of iterations
     """
-    pi_k = np.arange(nA)
+    pi_k = np.arange(nS)
     k = 1
 
     while k < maxiter:
@@ -200,10 +202,10 @@ def frozen_lake(basic_case=True, M=1000, render=False):
     """
     if basic_case == True:
         # Make environment for 4x4 scenario
-        env_name  = 'FrozenLake-v0'
+        env_name  = 'FrozenLake-v1'
     else:
         # Make environment for 8x8 scenario
-        env_name = 'FrozenLake8x8-v0'
+        env_name = 'FrozenLake8x8-v1'
 
 
     env = gym.make(env_name).env
@@ -252,7 +254,7 @@ def run_simulation(env, policy, render=True, beta = 1.0):
     """
     #define variables
     obs = env.reset()
-    done == False
+    done = False
     total_reward = 0
     k = 0
 
@@ -266,7 +268,7 @@ def run_simulation(env, policy, render=True, beta = 1.0):
             k += 1
             obs, reward, done, _ = env.step(int(policy[obs]))
             env.render(mode = 'human')
-            total_reward += beta**k*reward
+            total_reward += (beta ** k) * reward
 
     else:
         obs = env.reset()
@@ -278,3 +280,5 @@ def run_simulation(env, policy, render=True, beta = 1.0):
 
     return total_reward
 
+if __name__ == "__main__":
+    print(frozen_lake())
