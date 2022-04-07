@@ -1,10 +1,15 @@
 # policy_iteration.py
 """Volume 2: Policy Function Iteration.
-<Name>
-<Class>
-<Date>
+<Sophie Gee>
+<Volume 2>
+<04/07/22>
 """
 
+from re import I
+import numpy as np
+import scipy.linalg as la
+import gym
+from gym import wrappers
 # Intialize P for test example
 #Left =0
 #Down = 1
@@ -48,7 +53,29 @@ def value_iteration(P, nS ,nA, beta = 1, tol=1e-8, maxiter=3000):
        v (ndarray): The discrete values for the true value function.
        n (int): number of iterations
     """
-    raise NotImplementedError("Problem 1 Incomplete")
+    #instantiate Value at 0
+    V_old = np.zeros(nS)
+    V_new = np.zeros(nS)
+    sa_vector = np.zeros(nA)
+    i = 1
+
+    while i < maxiter:
+        for s in range(nS):
+            for a in range(nA):
+                for tuple_info in P[s][a]:
+                    # tuple_info is a tuple of (probability, next state, reward, done)
+                    p, s_, u, _ = tuple_info
+                    # sums up the possible end states and rewards with given action
+                    sa_vector[a] += (p * (u + beta * V_old[s_]))
+                #add the max value to the value function
+                V_new[s] = np.max(sa_vector)
+            sa_vector = np.zeros(nA)
+        i += 1
+        #check for convergence
+        if la.norm(V_new - V_old) < tol:
+            return V_new, i
+        V_old = V_new
+            
 
 # Problem 2
 def extract_policy(P, nS, nA, v, beta = 1.0):
@@ -65,7 +92,20 @@ def extract_policy(P, nS, nA, v, beta = 1.0):
     Returns:
         policy (ndarray): which direction to move in from each square.
     """
-    raise NotImplementedError("Problem 2 Incomplete")
+    policy_func = np.zeros(nS)
+
+    for s in range(nS):
+        temp_max = np.zeros(nA)
+        for a in range(nA):
+            for tuple_info in P[s][a]:
+                    # tuple_info is a tuple of (probability, next state, reward, done)
+                    p, s_, u, _ = tuple_info
+                    # sums up the possible end states and rewards with given action
+                    temp_max[a] += (p * (u + beta * v[s_]))
+        policy_func[s] = np.argmax(temp_max)
+
+    return policy_func
+
 
 # Problem 3
 def compute_policy_v(P, nS, nA, policy, beta=1.0, tol=1e-8):
@@ -83,7 +123,26 @@ def compute_policy_v(P, nS, nA, policy, beta=1.0, tol=1e-8):
     Returns:
         v (ndarray): The discrete values for the true value function.
     """
-    raise NotImplementedError("Problem 3 Incomplete")
+    V_k_1 = np.zeros(nS)
+    V_k = np.zeros(nS)
+    while True:
+        for s in range(nS):
+
+            sa = 0
+            a = policy[s]
+
+            for tuple_info in P[s][a]:
+                # tuple_info is a tuple of (probability, next state, reward, done)
+                p, s_, u, _ = tuple_info
+                # sums up the possible end states and rewards with given action
+                sa += (p * (u + beta * policy[s_]))
+            #add the max value to the value function
+            V_k_1[s] = sa
+
+        if la.norm(V_k_1 - V_k) < tol:
+            return V_k_1
+            
+        V_k = V_k_1
 
 # Problem 4
 def policy_iteration(P, nS, nA, beta=1, tol=1e-8, maxiter=200):
@@ -103,7 +162,25 @@ def policy_iteration(P, nS, nA, beta=1, tol=1e-8, maxiter=200):
         policy (ndarray): which direction to move in each square.
         n (int): number of iterations
     """
-    raise NotImplementedError("Problem 4 Incomplete")
+    pi_k = np.arange(nA)
+    k = 1
+
+    while k < maxiter:
+
+        #policy evaluation and improvement
+        V_k_1 = compute_policy_v(P, nS, nA, pi_k, beta)
+        pi_k_1 = extract_policy(P, nS, nA, V_k_1, beta)
+
+        #check for convergence
+        if la.norm(pi_k_1 - pi_k) < tol:
+            return V_k_1, pi_k_1, k
+
+        #reset variables
+        pi_k = pi_k_1
+        k += 1
+
+    return V_k_1, pi_k_1, k
+
 
 # Problem 5 and 6
 def frozen_lake(basic_case=True, M=1000, render=False):
@@ -121,7 +198,44 @@ def frozen_lake(basic_case=True, M=1000, render=False):
     pi_policy (ndarray): The optimal policy for policy iteration.
     pi_total_rewards (float): The mean expected value for following the policy iteration optimal policy.
     """
-    raise NotImplementedError("Problem 5 Incomplete")
+    if basic_case == True:
+        # Make environment for 4x4 scenario
+        env_name  = 'FrozenLake-v0'
+    else:
+        # Make environment for 8x8 scenario
+        env_name = 'FrozenLake8x8-v0'
+
+
+    env = gym.make(env_name).env
+    # Find number of states and actions
+    nS = env.observation_space.n
+    nA = env.action_space.n
+
+    # Get the dictionary with all the states and actions
+    P = env.P
+    value_func = value_iteration(P, nS, nA)[0]
+
+    #get vi_policy
+    vi_policy = extract_policy(P, nS, nA, value_func)
+    pi_value_func, pi_policy, _ = policy_iteration(P, nS, nA)
+
+    vi = 0
+    pi = 0
+
+    #collect mean expected rewards
+    for _ in range(M):
+        vi += run_simulation(env, vi_policy)
+        pi += run_simulation(env, pi_policy)
+    
+
+    vi_total_rewards = vi / float(M)
+    pi_total_rewards = pi / float(M)
+    env.close()
+
+    return vi_policy, vi_total_rewards, pi_value_func, pi_policy, pi_total_rewards
+
+
+
 
 # Problem 6
 def run_simulation(env, policy, render=True, beta = 1.0):
@@ -136,4 +250,31 @@ def run_simulation(env, policy, render=True, beta = 1.0):
     Returns:
     total reward (float): Value of the total reward received under policy.
     """
-    raise NotImplementedError("Problem 6 Incomplete")
+    #define variables
+    obs = env.reset()
+    done == False
+    total_reward = 0
+    k = 0
+
+    #handle both cases of rendering
+    if render == True:
+        env.render(mode = 'human')
+        obs = env.reset()
+
+        #collect reward by incrementation
+        if done != True:
+            k += 1
+            obs, reward, done, _ = env.step(int(policy[obs]))
+            env.render(mode = 'human')
+            total_reward += beta**k*reward
+
+    else:
+        obs = env.reset()
+        #collect reward by incrementation
+        if done != True:
+            k += 1
+            obs, reward, done, _ = env.step(int(policy[obs]))
+            total_reward += beta**k*reward
+
+    return total_reward
+
