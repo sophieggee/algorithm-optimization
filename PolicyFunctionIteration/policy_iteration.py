@@ -56,11 +56,11 @@ def value_iteration(P, nS ,nA, beta = 1, tol=1e-8, maxiter=3000):
     #instantiate Value at 0
     V_old = np.zeros(nS)
     V_new = np.zeros(nS)
-    sa_vector = np.zeros(nA)
-    i = 1
+    i = 0
 
     while i < maxiter:
         for s in range(nS):
+            sa_vector = np.zeros(nA)
             for a in range(nA):
                 for tuple_info in P[s][a]:
                     # tuple_info is a tuple of (probability, next state, reward, done)
@@ -69,12 +69,11 @@ def value_iteration(P, nS ,nA, beta = 1, tol=1e-8, maxiter=3000):
                     sa_vector[a] += (p * (u + beta * V_old[s_]))
                 #add the max value to the value function
                 V_new[s] = np.max(sa_vector)
-            sa_vector = np.zeros(nA)
         i += 1
         #check for convergence
         if la.norm(V_new - V_old) < tol:
             return V_new, i
-        V_old = V_new
+        V_old = np.copy(V_new)
             
 
 # Problem 2
@@ -127,9 +126,8 @@ def compute_policy_v(P, nS, nA, policy, beta=1.0, tol=1e-8):
     V_k = np.zeros(nS)
     while True:
         for s in range(nS):
-
             sa = 0
-            a = int(policy[s])
+            a = policy[s]
             if a not in P[s]:
                 V_k_1[s] = 0
             else:
@@ -137,7 +135,7 @@ def compute_policy_v(P, nS, nA, policy, beta=1.0, tol=1e-8):
                     # tuple_info is a tuple of (probability, next state, reward, done)
                     p, s_, u, _ = tuple_info
                     # sums up the possible end states and rewards with given action
-                    sa += (p * (u + beta * policy[s_]))
+                    sa += (p * (u + beta * V_k[s_]))
                 #add the max value to the value function
             V_k_1[s] = sa
 
@@ -170,7 +168,7 @@ def policy_iteration(P, nS, nA, beta=1, tol=1e-8, maxiter=200):
     while k < maxiter:
 
         #policy evaluation and improvement
-        V_k_1 = compute_policy_v(P, nS, nA, pi_k, beta)
+        V_k_1 = compute_policy_v(P, nS, nA, pi_k, beta, tol)
         pi_k_1 = extract_policy(P, nS, nA, V_k_1, beta)
 
         #check for convergence
@@ -178,7 +176,7 @@ def policy_iteration(P, nS, nA, beta=1, tol=1e-8, maxiter=200):
             return V_k_1, pi_k_1, k
 
         #reset variables
-        pi_k = pi_k_1
+        pi_k = np.copy(pi_k_1)
         k += 1
 
     return V_k_1, pi_k_1, k
@@ -200,7 +198,7 @@ def frozen_lake(basic_case=True, M=1000, render=False):
     pi_policy (ndarray): The optimal policy for policy iteration.
     pi_total_rewards (float): The mean expected value for following the policy iteration optimal policy.
     """
-    if basic_case == True:
+    if basic_case:
         # Make environment for 4x4 scenario
         env_name  = 'FrozenLake-v1'
     else:
@@ -221,20 +219,19 @@ def frozen_lake(basic_case=True, M=1000, render=False):
     vi_policy = extract_policy(P, nS, nA, value_func)
     pi_value_func, pi_policy, _ = policy_iteration(P, nS, nA)
 
-    vi = 0
-    pi = 0
+    vi = []
+    pi = []
 
     #collect mean expected rewards
     for _ in range(M):
-        vi += run_simulation(env, vi_policy)
-        pi += run_simulation(env, pi_policy)
-    
-
-    vi_total_rewards = vi / float(M)
-    pi_total_rewards = pi / float(M)
+        vi.append(run_simulation(env, vi_policy))
+        pi.append(run_simulation(env, pi_policy))
     env.close()
 
-    return vi_policy, vi_total_rewards, pi_value_func, pi_policy, pi_total_rewards
+    vi_total_rewards = np.array(vi)
+    pi_total_rewards = np.array(pi)
+
+    return vi_policy, np.mean(vi_total_rewards, axis = 0), pi_value_func, pi_policy, np.mean(pi_total_rewards, axis = 0)
 
 
 
@@ -256,29 +253,13 @@ def run_simulation(env, policy, render=True, beta = 1.0):
     obs = env.reset()
     done = False
     total_reward = 0
-    k = 0
+    k = 1
 
-    #handle both cases of rendering
-    if render == True:
-        env.render(mode = 'human')
-        obs = env.reset()
-
-        #collect reward by incrementation
-        if done != True:
-            k += 1
-            obs, reward, done, _ = env.step(int(policy[obs]))
-            env.render(mode = 'human')
-            total_reward += (beta ** k) * reward
-
-    else:
-        obs = env.reset()
-        #collect reward by incrementation
-        if done != True:
-            k += 1
-            obs, reward, done, _ = env.step(int(policy[obs]))
-            total_reward += beta**k*reward
-
+    while not done:
+        obs, reward, done, _ = env.step(int(policy[obs]))
+        total_reward += beta**k * reward
+        k += 1
     return total_reward
 
 if __name__ == "__main__":
-    print(frozen_lake())
+    print(frozen_lake(False))
